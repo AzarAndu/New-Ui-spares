@@ -253,6 +253,24 @@ window.jumpToPage = () => {
   const p = +jumpPage.value;
   if (p > 0) { currentPage = p; render(); }
 };
+  /* ===== Select text anywhere → auto search ===== */
+document.addEventListener("mouseup", () => {
+  const sel = window.getSelection().toString().trim();
+
+  // ignore very small selections
+  if (!sel || sel.length < 3) return;
+
+  // ignore selections inside input/textarea
+  const active = document.activeElement;
+  if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) {
+    return;
+  }
+
+  searchEl.value = sel;
+  currentPage = 1;
+  render();
+});
+
 
 /* ========== FAST SHEETDB LOAD ========== */
 async function loadData(force = false) {
