@@ -333,15 +333,15 @@ async function openQR(){
   try{
     qrScanner = new Html5Qrcode("qr-reader");
     const config = {
-      fps: 15,
-      qrbox: null, // full width of container
-      experimentalFeatures: { useBarCodeDetectorIfSupported: true },
-      formatsToSupport: [
-        Html5QrcodeSupportedFormats.QR_CODE,
-        Html5QrcodeSupportedFormats.EAN_13,
-        Html5QrcodeSupportedFormats.EAN_8,
-        Html5QrcodeSupportedFormats.UPC_A,
-        Html5QrcodeSupportedFormats.CODE_128
+      fps: 10, // lower FPS = faster decode + stable focus
+  qrbox: { width: 260, height: 260 }, // 🔑 SPEED KEY
+  experimentalFeatures: {
+    useBarCodeDetectorIfSupported: true
+  },
+  formatsToSupport: [
+    Html5QrcodeSupportedFormats.QR_CODE,
+    Html5QrcodeSupportedFormats.EAN_13
+        
       ]
     };
     const cameraConfig = { facingMode: "environment" }; // only one key
@@ -351,11 +351,13 @@ async function openQR(){
       (decodedText, decodedResult) => {
         if(scanLock) return;
         scanLock = true;
+        qrScanner.stop().catch(()=>{});
         (be => be?.play?.().catch?.(() => {}))(beep); navigator.vibrate?.(180);
         document.getElementById('search').value = decodedText;
         currentPage = 1; render();
         // give a short moment then close so user sees the value
-        setTimeout(()=>{ closeQR(); }, 250);
+        qrScanner.stop().catch(()=>{});
+         closeQR();
       },
       (error) => {
         // ignore frame decode errors
