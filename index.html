@@ -69,10 +69,7 @@ body.dark .modal{ background:var(--dark-card); color:var(--dark-text); }
 <body>
 <div id="status">Loading data...</div>
 <h2>Spare Parts Search</h2>
-<div id="soundHint" style="margin:8px 0; padding:10px; background:#fff3cd; border-radius:8px; font-size:14px; text-align:center; display:none;">
-  🔊 Tap below to enable scanner beep sound (required once):
-  <button id="unlockSound" class="btn btn-primary" style="margin-top:8px;">Enable Sound</button>
-</div>
+
 <div class="topbar">
   <button id="btn-scan" class="btn btn-primary">📷 Scan (QR / Barcode)</button>
     <!-- ADD THIS LINE -->
@@ -511,17 +508,7 @@ throw new Error("not-found");
 /* free camera when page unloaded */
 window.addEventListener('pagehide', ()=>{ safeClearScanner(); });
 window.addEventListener('beforeunload', ()=>{ safeClearScanner(); });
-// ────── SOUND UNLOCKER (add this) ──────
-const beepTest = new Audio(beep.src); // clone of your beep
-document.getElementById('unlockSound')?.addEventListener('click', () => {
-  beepTest.play().catch(() => {});
-  document.getElementById('soundHint').style.display = 'none';
-});
 
-// Auto-show hint if sound might be blocked
-if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-  document.getElementById('soundHint').style.display = 'block';
-}
 async function scanPrintedTextFromImage(file) {
   const { data } = await Tesseract.recognize(file, "eng", {
     tessedit_char_whitelist: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-/"
