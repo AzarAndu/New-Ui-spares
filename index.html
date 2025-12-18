@@ -63,6 +63,11 @@ body.dark .modal{ background:var(--dark-card); color:var(--dark-text); }
   #qr-reader{ height:260px; }
   #search{ width:100%; }
 }
+  .scan-success {
+  box-shadow: 0 0 22px rgba(0,255,0,0.9);
+  transition: box-shadow 0.2s ease;
+}
+
 </style>
 <script src="https://unpkg.com/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
@@ -349,15 +354,19 @@ async function openQR(){
       cameraConfig,
       config,
       (decodedText, decodedResult) => {
-        if(scanLock) return;
-        scanLock = true;
-        qrScanner.stop().catch(()=>{});
-        (be => be?.play?.().catch?.(() => {}))(beep); navigator.vibrate?.(180);
-        document.getElementById('search').value = decodedText;
-        currentPage = 1; render();
-        // give a short moment then close so user sees the value
-        qrScanner.stop().catch(()=>{});
-         closeQR();
+      if (scanLock) return;
+scanLock = true;
+
+(be => be?.play?.().catch?.(() => {}))(beep);
+navigator.vibrate?.(180);
+qrReader.classList.add("scan-success");
+setTimeout(() => qrReader.classList.remove("scan-success"), 200);
+
+document.getElementById('search').value = decodedText;
+currentPage = 1;
+render();
+
+closeQR(); // stop + clear happens inside
       },
       (error) => {
         // ignore frame decode errors
@@ -456,7 +465,7 @@ async function handleImageFile(file){
   // 2) Try BarcodeDetector (EAN-13) on ImageBitmap (fast when supported)
   try{
     if('BarcodeDetector' in window){
-      const formats = ['ean_13','ean_8','upc_a']; // option B
+      const formats = ['ean_13']; // option B
       let detector;
       try{ detector = new BarcodeDetector({formats}); }catch(e){ detector = new BarcodeDetector(); }
       const imgBitmap = await createImageBitmap(file);
