@@ -289,6 +289,19 @@ document.addEventListener("mouseup", () => {
   render();
 });
 
+  /* ===== Mobile tap on table cell → auto search ===== */
+tbody.addEventListener("click", (e) => {
+  const cell = e.target.closest("td");
+  if (!cell) return;
+
+  const text = cell.textContent.trim();
+  if (!text || text.length < 3) return;
+
+  searchEl.value = text;
+  currentPage = 1;
+  render();
+});
+
 
 /* ========== FAST SHEETDB LOAD ========== */
 async function loadData(force = false) {
