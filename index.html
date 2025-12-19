@@ -312,41 +312,39 @@ document.getElementById("btn-google").addEventListener("click", () => {
   window.open(url, "_blank");
 });
   /* ===== FitinPart Search Button ===== */
-/* ===== Multi-site spare parts search ===== */
+/* ===== Smart Spare Parts Search (Fast, No Prompt) ===== */
 document.getElementById("btn-fitinpart").addEventListener("click", () => {
   const q = searchEl.value.trim();
   if (!q) return;
 
-  const choice = prompt(
-`Choose site:
-1 = Partsouq
-2 = FitinPart
-3 = Spareto
-4 = SumarAuto`
-  );
+  // Priority 1: Partsouq (most reliable)
+  const partsouq =
+    "https://partsouq.com/en/search/all?q=" + encodeURIComponent(q);
 
-  let url = "";
+  // Priority 2: Spareto (confirmed keyword search)
+  const spareto =
+    "https://spareto.com/products?keywords=" + encodeURIComponent(q);
 
-  switch (choice) {
-    case "1":
-      url = "https://partsouq.com/en/search/all?q=" + encodeURIComponent(q);
-      break;
-    case "2":
-      url = "https://www.google.com/search?q=" +
-            encodeURIComponent("site:fitinpart.sg " + q);
-      break;
-    case "3":
-      url = "https://spareto.com/search?q=" + encodeURIComponent(q);
-      break;
-    case "4":
-      url = "https://www.sumarauto.com/search?q=" + encodeURIComponent(q);
-      break;
-    default:
-      return;
-  }
+  // Priority 3: Sumarauto (best guess)
+  const sumarauto =
+    "https://www.sumarauto.com/Products/" + encodeURIComponent(q);
 
-  window.open(url, "_blank");
+  // Fallback: Google site search
+  const googleFallback =
+    "https://www.google.com/search?q=" +
+    encodeURIComponent(
+      "site:partsouq.com " + q +
+      " OR site:spareto.com " + q +
+      " OR site:sumarauto.com " + q
+    );
+
+  // 🔥 Default open: Partsouq
+  window.open(partsouq, "_blank");
+
+  // ⌨️ Power-user tip (console optional)
+  console.info("Alt searches:", spareto, sumarauto, googleFallback);
 });
+
 
 
   /* ===== Clear Search Button ===== */
