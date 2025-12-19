@@ -317,41 +317,37 @@ document.getElementById("btn-fitinpart").addEventListener("click", () => {
   const q = searchEl.value.trim();
   if (!q) return;
 
-  const sites = [
-    {
-      name: "Partsouq",
-      direct: "https://partsouq.com/en/search/all?q=" + encodeURIComponent(q),
-      google: "site:partsouq.com " + q
-    },
-    {
-      name: "FitinParts",
-      direct: "https://www.fitinpart.sg/v2/en/product/" + encodeURIComponent(q),
-      google: "site:fitinpart.sg " + q
-    },
-    {
-      name: "Spareto",
-      direct: "https://spareto.com/search?q=" + encodeURIComponent(q),
-      google: "site:spareto.com " + q
-    },
-    {
-      name: "SumarAuto",
-      direct: "https://www.sumarauto.com/search?q=" + encodeURIComponent(q),
-      google: "site:sumarauto.com " + q
-    }
-  ];
+  const choice = prompt(
+`Choose site:
+1 = Partsouq
+2 = FitinPart
+3 = Spareto
+4 = SumarAuto`
+  );
 
-  // Open all direct attempts in new tabs
-  sites.forEach(site => {
-    window.open(site.direct, "_blank");
-  });
+  let url = "";
 
-  // Optional: one Google fallback tab (LAST)
-  const googleFallback =
-    "https://www.google.com/search?q=" +
-    encodeURIComponent(sites.map(s => s.google).join(" OR "));
+  switch (choice) {
+    case "1":
+      url = "https://partsouq.com/en/search/all?q=" + encodeURIComponent(q);
+      break;
+    case "2":
+      url = "https://www.google.com/search?q=" +
+            encodeURIComponent("site:fitinpart.sg " + q);
+      break;
+    case "3":
+      url = "https://spareto.com/search?q=" + encodeURIComponent(q);
+      break;
+    case "4":
+      url = "https://www.sumarauto.com/search?q=" + encodeURIComponent(q);
+      break;
+    default:
+      return;
+  }
 
-  window.open(googleFallback, "_blank");
+  window.open(url, "_blank");
 });
+
 
   /* ===== Clear Search Button ===== */
 document.getElementById("btn-clear").addEventListener("click", () => {
