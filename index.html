@@ -98,6 +98,39 @@ body.dark td.cell-highlight {
   color: #000;
 }
 
+    /* ===== FORCE highlight visibility (final override) ===== */
+td.cell-highlight {
+  background-color: #ffd54f !important;
+}
+
+body.dark td.cell-highlight {
+  background-color: #ffb300 !important;
+}
+
+     /* ===== Table grid lines (light mode) ===== */
+table {
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+/* ===== Table grid lines (dark mode) ===== */
+body.dark th,
+body.dark td {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+     /* ===== Highlighted cell border boost ===== */
+td.cell-highlight {
+  border: 2px solid #000 !important;
+}
+
+body.dark td.cell-highlight {
+  border: 2px solid #fff !important;
+}
+
 </style>
 <script src="https://unpkg.com/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
