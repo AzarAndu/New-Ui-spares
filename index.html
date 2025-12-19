@@ -312,16 +312,45 @@ document.getElementById("btn-google").addEventListener("click", () => {
   window.open(url, "_blank");
 });
   /* ===== FitinPart Search Button ===== */
-/* ===== FitinPart (smart direct product jump via Google) ===== */
+/* ===== Multi-site spare parts search ===== */
 document.getElementById("btn-fitinpart").addEventListener("click", () => {
   const q = searchEl.value.trim();
   if (!q) return;
 
-  const url =
-    "https://www.google.com/search?q=" +
-    encodeURIComponent("site:fitinpart.sg/v2/en/product " + q);
+  const sites = [
+    {
+      name: "Partsouq",
+      direct: "https://partsouq.com/en/search/all?q=" + encodeURIComponent(q),
+      google: "site:partsouq.com " + q
+    },
+    {
+      name: "FitinParts",
+      direct: "https://www.fitinpart.sg/v2/en/product/" + encodeURIComponent(q),
+      google: "site:fitinpart.sg " + q
+    },
+    {
+      name: "Spareto",
+      direct: "https://spareto.com/search?q=" + encodeURIComponent(q),
+      google: "site:spareto.com " + q
+    },
+    {
+      name: "SumarAuto",
+      direct: "https://www.sumarauto.com/search?q=" + encodeURIComponent(q),
+      google: "site:sumarauto.com " + q
+    }
+  ];
 
-  window.open(url, "_blank");
+  // Open all direct attempts in new tabs
+  sites.forEach(site => {
+    window.open(site.direct, "_blank");
+  });
+
+  // Optional: one Google fallback tab (LAST)
+  const googleFallback =
+    "https://www.google.com/search?q=" +
+    encodeURIComponent(sites.map(s => s.google).join(" OR "));
+
+  window.open(googleFallback, "_blank");
 });
 
   /* ===== Clear Search Button ===== */
