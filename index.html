@@ -804,32 +804,45 @@ async function handleImageFile(file){
   }catch(e){
     // continue to fallback
   }
-  // 2) Try BarcodeDetector (EAN-13) on ImageBitmap (fast when supported)
-  try{
-    if('BarcodeDetector' in window){
-      const formats = ['ean_13']; // option B
-      let detector;
-      try{ detector = new BarcodeDetector({formats}); }catch(e){ detector = new BarcodeDetector(); }
-      const imgBitmap = await createImageBitmap(file);
-      const results = await detector.detect(imgBitmap);
-      if(results && results.length>0){
-        const val = results[0].rawValue || results[0].rawData || results[0].displayValue || results[0].rawText;
-        if(val){
-          (be => be?.play?.().catch?.(() => {}))(beep); navigator.vibrate?.(180);
-          document.getElementById('search').value = val;
-          currentPage = 1; render();
-          return;
-        }
+                 // 2) Try BarcodeDetector (EAN-13) on ImageBitmap (fast when supported)
+try {
+  if ("BarcodeDetector" in window) {
+    const formats = ["ean_13"];
+    let detector;
+    try {
+      detector = new BarcodeDetector({ formats });
+    } catch {
+      detector = new BarcodeDetector();
+    }
+
+    const imgBitmap = await createImageBitmap(file);
+    const results = await detector.detect(imgBitmap);
+
+    if (results && results.length > 0) {
+      const val =
+        results[0].rawValue ||
+        results[0].rawData ||
+        results[0].displayValue ||
+        results[0].rawText;
+
+      if (val) {
+        beep.play().catch(() => {});
+        navigator.vibrate?.(180);
+        document.getElementById("search").value = val;
+        currentPage = 1;
+        render();
+        return;
       }
     }
   }
-                         // OCR fallback (printed text like Google Lens)
+} catch (e) {
+  // ignore and continue
+}
+
+// 3) OCR fallback (printed text like Google Lens)
 const ocrFound = await scanPrintedTextFromImage(file);
-if (ocrFound) return;                           
-    
-  catch(e){
-    // ignore and continue
-  }
+if (ocrFound) return;
+
   // 3) Last attempt: draw to canvas & use Html5Qrcode's decodeFromImage or scanFile again
   try{
     const img = document.createElement('img');
