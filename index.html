@@ -745,33 +745,32 @@ btnFlash.addEventListener('click', async ()=>{
    2) fallback: use BarcodeDetector (EAN-13) if available
    3) final fallback: draw to canvas + try html5-qrcode scan attempts
 */
-btnPhoto.addEventListener('click', ()=> {
-  // create hidden file input and read file via FileReader to prevent native preview
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.style.display = 'none';
-  input.onchange = async (e)=>{
+       btnPhoto.addEventListener('click', async () => {
+  // ✅ STOP CAMERA BEFORE PICKING IMAGE
+  safeClearScanner();
+
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
+  input.style.display = "none";
+
+  input.onchange = async (e) => {
     const file = e.target.files && e.target.files[0];
-    if(!file) return;
-    // Read the file into memory first - prevents some browsers' default preview behaviour
-    const reader = new FileReader();
-    reader.onload = async () => {
-      // create blob from result
-      try{
-        await handleImageFile(file);
-      }catch(err){
-        alert("No QR or supported barcode found in image.");
-      }
-    };
-    reader.onerror = ()=>{ alert("Failed to read file."); };
-    reader.readAsArrayBuffer(file);
+    if (!file) return;
+
+    try {
+      await handleImageFile(file);
+      closeQR(); // ✅ CLOSE MODAL AFTER SUCCESS
+    } catch (err) {
+      alert("No barcode or readable text found in image.");
+    }
   };
+
   document.body.appendChild(input);
   input.click();
-  // cleanup input after selection
-  input.addEventListener('blur', ()=>input.remove());
+  input.remove();
 });
+
 async function handleImageFile(file){
   // ensure library loaded (for scanFile)
   try{ await loadHtml5QrcodeScript(); }catch(e){ throw new Error("library"); }
