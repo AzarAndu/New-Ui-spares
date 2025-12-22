@@ -452,6 +452,10 @@ document.getElementById("btn-send").addEventListener("click", () => {
 });
                      /* =====btn-read-toggle Logic ===== */
            /* ===== btn-read-toggle Logic (Resume / Pause) ===== */
+let autoReadEnabled = true;
+let lastRowId = null;
+
+  
 const readToggle = document.getElementById("readToggle");
 const readToggleLabel = document.getElementById("readToggleLabel");
 
@@ -928,8 +932,7 @@ window.addEventListener('beforeunload', ()=>{ safeClearScanner(); });
 
     /* ===== AUTO READ FROM SHEET (Laptop side | Latest Row Only) ===== */
 
-let autoReadEnabled = true;
-let lastRowId = null;
+
 
 async function readLatestFromSheet() {
   if (!autoReadEnabled) return;
