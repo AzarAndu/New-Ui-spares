@@ -436,9 +436,17 @@ document.getElementById("btn-send").addEventListener("click", () => {
     .catch(() => alert("Send failed"));
 });
                      /* =====btn-read-toggle Logic ===== */
-              document.getElementById("btn-read-toggle").addEventListener("click", () => {
-  autoReadEnabled = true;
+           /* ===== btn-read-toggle Logic (Resume / Pause) ===== */
+const btnReadToggle = document.getElementById("btn-read-toggle");
+
+btnReadToggle.addEventListener("click", () => {
+  autoReadEnabled = !autoReadEnabled;
+
+  btnReadToggle.textContent = autoReadEnabled
+    ? "⏸ Pause Laptop Read"
+    : "▶ Resume Laptop Read";
 });
+
 
 
                             /* ===== Site Dropdown Logic ===== */
