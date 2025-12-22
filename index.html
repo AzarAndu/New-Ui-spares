@@ -888,31 +888,35 @@ window.addEventListener('pagehide', ()=>{ safeClearScanner(); });
 window.addEventListener('beforeunload', ()=>{ safeClearScanner(); });
 
       /* ===== AUTO READ FROM SHEET (Laptop side) ===== */
+/* ===== Auto Sync From Sheet (Laptop side) ===== */
 async function readFromSheet() {
   try {
     const res = await fetch(SYNC_URL);
     const text = (await res.text()).trim();
 
+    // if sheet is empty or no change → do nothing
     if (!text) return;
 
-    // fill search & render
-    searchEl.value = text;
-    currentPage = 1;
-    render();
+    // if new value received
+    if (text !== searchEl.value) {
+      searchEl.value = text;
+      currentPage = 1;
+      render();
+    }
 
-    // 🔥 CLEAR SHEET after successful read
+    // clear sheet so this value is consumed only once
     await fetch(SYNC_URL + "?clear=1");
-
   } catch (e) {
-    // silent
+    // silent fail — we don’t want errors to break the app
   }
 }
 
-// poll every 3 seconds
-// run auto-sync ONLY on laptop / desktop
+// Poll every 3 seconds only on laptop/desktop
 if (!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
   setInterval(readFromSheet, 3000);
 }
+
+
 
 
 
