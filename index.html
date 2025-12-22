@@ -275,7 +275,7 @@ document.getElementById("btn-add").addEventListener("click", function () {
 </div>
 <script>
   /* =====================SEARCH VALUE SYNC SHEET LOGIC ===================== */
-                const SYNC_URL = "https://script.google.com/macros/s/AKfycbx0PujhCEhhf7yVAi1uqmGo04Q3v-U4mv90ro0u_kOvC624A8Yzya9elPPL-6s-zEvP1w/exec";
+                const SYNC_URL = "https://script.google.com/macros/s/AKfycbzbsZCaBCFJwOy-Vd81irTNdswQgDik8v_g-aOlblq9Pog6uTerWvp7LUw5eMJcvxjp/exec";
 
 
 
@@ -421,18 +421,18 @@ document.getElementById("btn-clear").addEventListener("click", () => {
   render();
 });
          /* ===== Send to Laptop Button ===== */
-         document.getElementById("btn-send").addEventListener("click", () => {
+       /* ===== Send to Laptop Button ===== */
+document.getElementById("btn-send").addEventListener("click", () => {
   const val = searchEl.value.trim();
   if (!val) return;
 
   fetch(SYNC_URL + "?write=" + encodeURIComponent(val))
     .then(() => {
       navigator.vibrate?.(100);
-      alert("Sent to laptop ✔");
+      alert("Sent ✔");
     })
     .catch(() => alert("Send failed"));
 });
-
 
                             /* ===== Site Dropdown Logic ===== */
 const btnSites = document.getElementById("btn-sites");
