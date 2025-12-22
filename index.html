@@ -891,7 +891,10 @@ window.addEventListener('beforeunload', ()=>{ safeClearScanner(); });
 /* ===== Auto Sync From Sheet (Laptop side) ===== */
 async function readFromSheet() {
   try {
-    const res = await fetch(SYNC_URL);
+    const res = await fetch(SYNC_URL + "?_=" + Date.now(), {
+  cache: "no-store"
+});
+
     const text = (await res.text()).trim();
 
     // if sheet is empty or no change → do nothing
@@ -905,7 +908,10 @@ async function readFromSheet() {
     }
 
     // clear sheet so this value is consumed only once
-    await fetch(SYNC_URL + "?clear=1");
+   await fetch(SYNC_URL + "?clear=1&_=" + Date.now(), {
+  cache: "no-store"
+});
+
   } catch (e) {
     // silent fail — we don’t want errors to break the app
   }
